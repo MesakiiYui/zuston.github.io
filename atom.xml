@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://zuston.github.io/"/>
-  <updated>2016-09-23T15:57:29.000Z</updated>
+  <updated>2016-09-25T14:50:18.000Z</updated>
   <id>http://zuston.github.io/</id>
   
   <author>
@@ -14,6 +14,66 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>贪心算法</title>
+    <link href="http://zuston.github.io/2016/09/25/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/"/>
+    <id>http://zuston.github.io/2016/09/25/贪心算法/</id>
+    <published>2016-09-25T13:49:41.000Z</published>
+    <updated>2016-09-25T14:50:18.000Z</updated>
+    
+    <content type="html">&lt;p&gt;&amp;#x1F3C6;&lt;br&gt;&amp;#x6076;&amp;#x8865;&amp;#x4E00;&amp;#x4E0B;&amp;#x4E4B;&amp;#x524D;&amp;#x7684;&amp;#x7B97;&amp;#x6CD5;&amp;#xFF0C;&amp;#x505A;&amp;#x5B8C;&amp;#x4E4B;&amp;#x540E;&amp;#x770B;&amp;#x4E86;&amp;#x5927;&amp;#x795E;&amp;#x89E3;&amp;#x6CD5;&amp;#xFF0C;&amp;#x81EA;&amp;#x5DF1;&amp;#x7406;&amp;#x89E3;&amp;#x4E0B;&amp;#xFF0C;&amp;#x8BB0;&amp;#x5F55;&amp;#x4E0B;&amp;#x6765;&amp;#x3002;&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;1&amp;#xFF1A;Longest-Substring-Without-Repeating-Characters&quot;&gt;&lt;a href=&quot;#1&amp;#xFF1A;Longest-Substring-Without-Repeating-Characters&quot; class=&quot;headerlink&quot; title=&quot;1&amp;#xFF1A;Longest Substring Without Repeating Characters&quot;&gt;&lt;/a&gt;1&amp;#xFF1A;Longest Substring Without Repeating Characters&lt;/h2&gt;&lt;h4 id=&quot;Given-a-string-find-the-length-of-the-longest-substring-without-repeating-characters&quot;&gt;&lt;a href=&quot;#Given-a-string-find-the-length-of-the-longest-substring-without-repeating-characters&quot; class=&quot;headerlink&quot; title=&quot;Given a string, find the length of the longest substring without repeating characters.&quot;&gt;&lt;/a&gt;Given a string, find the length of the longest substring without repeating characters.&lt;/h4&gt;&lt;p&gt;&lt;strong&gt;example&lt;/strong&gt;:&lt;br&gt;Given &amp;#x201C;abcabcbb&amp;#x201D;, the answer is &amp;#x201C;abc&amp;#x201D;, which the length is 3.&lt;br&gt;Given &amp;#x201C;bbbbb&amp;#x201D;, the answer is &amp;#x201C;b&amp;#x201D;, with the length of 1.&lt;br&gt;Given &amp;#x201C;pwwkew&amp;#x201D;, the answer is &amp;#x201C;wke&amp;#x201D;, with the length of 3. Note that the answer must be a substring, &amp;#x201C;pwke&amp;#x201D; is a subsequence and not a substring.&lt;/p&gt;
+&lt;p&gt;&amp;#x9898;&amp;#x76EE;&amp;#xFF1A;&amp;#x5C31;&amp;#x662F;&amp;#x5BFB;&amp;#x627E;&amp;#x6700;&amp;#x957F;&amp;#x4E0D;&amp;#x91CD;&amp;#x590D;&amp;#x5B57;&amp;#x4E32;&lt;br&gt;&amp;#x89E3;&amp;#x6790;&amp;#xFF1A;&amp;#x5176;&amp;#x5B9E;&amp;#x6700;&amp;#x65B9;&amp;#x4FBF;&amp;#x6700;&amp;#x66B4;&amp;#x529B;&amp;#x7684;&amp;#x89E3;&amp;#x6CD5;&amp;#x5C31;&amp;#x662F;&amp;#x5C06;&amp;#x6BCF;&amp;#x4E00;&amp;#x4E2A;&amp;#x5B57;&amp;#x7B26;&amp;#x4E0E;&amp;#x540E;&amp;#x9762;&amp;#x7684;&amp;#x5B57;&amp;#x7B26;&amp;#x8FDB;&amp;#x884C;&amp;#x6BD4;&amp;#x8F83;&amp;#xFF0C;&amp;#x7136;&amp;#x540E;&amp;#x53D1;&amp;#x73B0;&amp;#x4E0E;&amp;#x73B0;&amp;#x6709;&amp;#x7684;&amp;#x5B57;&amp;#x4E32;&amp;#x91CD;&amp;#x590D;&amp;#x7684;&amp;#x5219;&amp;#x91CD;&amp;#x65B0;&amp;#x5F00;&amp;#x59CB;&amp;#x4E0B;&amp;#x4E00;&amp;#x8F6E;&amp;#x5FAA;&amp;#x73AF;&amp;#x6BD4;&amp;#x8F83;&amp;#x3002;&amp;#x90A3;&amp;#x4E48;&amp;#x8FD9;&amp;#x4E2A;&amp;#x7B97;&amp;#x6CD5;&amp;#x65F6;&amp;#x95F4;&amp;#x590D;&amp;#x6742;&amp;#x5EA6;&amp;#x662F;&amp;#x6BD4;&amp;#x8F83;&amp;#x9AD8;&amp;#x7684;&amp;#xFF0C;&amp;#x5E94;&amp;#x8BE5;&amp;#x662F;o(n^2),&amp;#x6539;&amp;#x8FDB;&amp;#x7684;&amp;#x7B97;&amp;#x6CD5;&amp;#x5C31;&amp;#x662F;&amp;#x5728;&amp;#x6BD4;&amp;#x8F83;&amp;#x8FD9;&amp;#x4E00;&amp;#x8F6E;&amp;#x4E0A;&amp;#x4E0B;&amp;#x529F;&amp;#x592B;&amp;#xFF0C;&amp;#x7528;&amp;#x4E00;&amp;#x4E2A;&amp;#x5F88;&amp;#x5DE7;&amp;#x5999;&amp;#x7684;&amp;#x65B9;&amp;#x6CD5;&amp;#x8FDB;&amp;#x884C;&amp;#x6BD4;&amp;#x8F83;&amp;#x3002;&lt;br&gt;&amp;#x6362;&amp;#x79CD;&amp;#x770B;&amp;#x5B57;&amp;#x7B26;&amp;#x662F;&amp;#x5426;&amp;#x5B58;&amp;#x5728;&amp;#x8FC7;&amp;#x7684;&amp;#x601D;&amp;#x8DEF;:&amp;#x5219;&amp;#x662F;&amp;#x5C06;&amp;#x51FA;&amp;#x73B0;&amp;#x8FC7;&amp;#x7684;&amp;#x5B57;&amp;#x7B26;&amp;#x4EE5;&amp;#x5B57;&amp;#x7B26;&amp;#x540D;&amp;#x4E3A;key&amp;#xFF0C;&amp;#x5F53;&amp;#x524D;&amp;#x4F4D;&amp;#x7F6E;&amp;#x503C;i&amp;#x4E3A;value&amp;#x7EC4;&amp;#x6210;&amp;#x6570;&amp;#x7EC4;&amp;#xFF0C;&amp;#x5982;&amp;#x679C;&amp;#x53D1;&amp;#x73B0;&amp;#x6709;&amp;#x91CD;&amp;#x590D;&amp;#xFF0C;&amp;#x5219;&amp;#x8BB0;&amp;#x5F55;&amp;#x5F53;&amp;#x524D;&amp;#x5B57;&amp;#x7B26;&amp;#x540D;&amp;#x4E0B;&amp;#x7684;&amp;#x6570;&amp;#x7EC4;&amp;#x7684;value&amp;#x503C;&amp;#xFF0C;&amp;#x4ECE;&amp;#x800C;&amp;#x53EF;&amp;#x4EE5;&amp;#x8BA1;&amp;#x7B97;&amp;#x51FA;&amp;#x5F53;&amp;#x524D;&amp;#x7684;&amp;#x4E0D;&amp;#x91CD;&amp;#x590D;&amp;#x5B57;&amp;#x4E32;&amp;#x7684;&amp;#x957F;&amp;#x5EA6;&amp;#x3002;&lt;br&gt;&amp;#x5728;&amp;#x8FD9;&amp;#x4E2A;&amp;#x8FC7;&amp;#x7A0B;&amp;#x4E2D;&amp;#xFF0C;&amp;#x6211;&amp;#x4EEC;&amp;#x8981;&amp;#x660E;&amp;#x786E;&amp;#x4E00;&amp;#x70B9;&amp;#x5C31;&amp;#x662F;&amp;#x5BF9;&amp;#x4E8E;&amp;#x4E00;&amp;#x4E2A;&amp;#x91CD;&amp;#x590D;&amp;#x5B57;&amp;#x7B26;&amp;#x7684;&amp;#x5B57;&amp;#x4E32;&amp;#xFF0C;&amp;#x90A3;&amp;#x4E48;&amp;#x4E0B;&amp;#x4E00;&amp;#x4E2A;&amp;#x5F00;&amp;#x59CB;&amp;#x67E5;&amp;#x627E;&amp;#x5B50;&amp;#x4E32;&amp;#x7684;&amp;#x521D;&amp;#x59CB;&amp;#x4F4D;&amp;#x7F6E;&amp;#xFF0C;&amp;#x5FC5;&amp;#x7136;&amp;#x5728;&amp;#x5176;&amp;#x91CD;&amp;#x590D;&amp;#x5B57;&amp;#x4E32;&amp;#x51FA;&amp;#x73B0;&amp;#x7684;&amp;#x7B2C;&amp;#x4E00;&amp;#x4E2A;&amp;#x7684;&amp;#x4E0B;&amp;#x4E00;&amp;#x4F4D;&amp;#x3002;&lt;br&gt;&lt;strong&gt;example&lt;/strong&gt;&amp;#xFF1A;&lt;br&gt;&amp;#x6570;&amp;#x7EC4;&amp;#x4E3A;:  int array[100];&lt;br&gt;index:  0&amp;#x2014;&amp;#x2014;&amp;#x2013;1&amp;#x2014;&amp;#x2014;&amp;#x2013;2&amp;#x2014;&amp;#x2014;&amp;#x2014;&amp;#x2013;3&amp;#x2014;&amp;#x2014;&amp;#x2013;4&amp;#x2014;&amp;#x2014;&amp;#x2014;&amp;#x2013;5&amp;#x2014;&amp;#x2014;&amp;#x2014;&amp;#x2014;6&lt;br&gt;value:  a&amp;#x2014;&amp;#x2014;&amp;#x2013;b&amp;#x2014;&amp;#x2014;&amp;#x2013;c&amp;#x2014;&amp;#x2014;&amp;#x2014;&amp;#x2013;a&amp;#x2014;&amp;#x2014;&amp;#x2013;c&amp;#x2014;&amp;#x2014;&amp;#x2014;&amp;#x2013;g&amp;#x2014;&amp;#x2014;&amp;#x2014;&amp;#x2014;h&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;first loop&lt;/strong&gt;:     &amp;#x4ECE;array[0]&amp;#x5230;array[3]&amp;#x4E2D;&amp;#xFF0C;&amp;#x53D1;&amp;#x73B0;index=0&amp;#x548C;index=3&amp;#x91CD;&amp;#x590D;&lt;br&gt;&lt;strong&gt;second loop&lt;/strong&gt;:    &amp;#x4ECE;array[1]&amp;#x5F00;&amp;#x59CB;&amp;#x5230;array[4],&amp;#x53D1;&amp;#x73B0;index=2&amp;#x548C;index=4&amp;#x91CD;&amp;#x590D;&lt;br&gt;&lt;strong&gt;third loop&lt;/strong&gt;:     &amp;#x4ECE;array[3]&amp;#x5F00;&amp;#x59CB;&amp;#xFF0C;&amp;#x5230;&amp;#x6700;&amp;#x540E;&amp;#x90FD;&amp;#x6CA1;&amp;#x6709;&amp;#x91CD;&amp;#x590D;&amp;#x5B57;&amp;#x7B26;&lt;br&gt;&amp;#x5C31;&amp;#x662F;&amp;#x8FD9;&amp;#x4E48;&amp;#x4E00;&amp;#x4E2A;&amp;#x6BD4;&amp;#x8F83;&amp;#x7684;&amp;#x8FC7;&amp;#x7A0B;&lt;/p&gt;
+&lt;p&gt;&amp;#x4EE3;&amp;#x7801;&amp;#x5982;&amp;#x4E0B;&amp;#xFF1A;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;c&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;lengthOfLongestSubstring&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;char&lt;/span&gt;* s)&lt;/span&gt;&lt;/span&gt;{
+    &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; length = &lt;span class=&quot;built_in&quot;&gt;strlen&lt;/span&gt;(s);
+    &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; MAX_SIZE = &lt;span class=&quot;number&quot;&gt;256&lt;/span&gt;;
+    &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; parray[MAX_SIZE];
+    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; i=&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;i&amp;lt;MAX_SIZE;i++){
+        parray[i]=&lt;span class=&quot;number&quot;&gt;-1&lt;/span&gt;;
+    }
+    &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; max=&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,start=&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;
+    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; i=&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;i&amp;lt;length;i++){
+        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt;(parray[s[i]]!=&lt;span class=&quot;number&quot;&gt;-1&lt;/span&gt;){
+            max = max&amp;gt;(i-start)?max:i-start;
+            start = parray[s[i]]+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;&amp;gt;start?parray[s[i]]+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;:start;
+        }
+        parray[s[i]]=i;
+    }
+    return max&amp;gt;length-start?max:length-start;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&quot;2&amp;#xFF1A;Container-With-Most-Water&quot;&gt;&lt;a href=&quot;#2&amp;#xFF1A;Container-With-Most-Water&quot; class=&quot;headerlink&quot; title=&quot;2&amp;#xFF1A;Container With Most Water&quot;&gt;&lt;/a&gt;2&amp;#xFF1A;Container With Most Water&lt;/h2&gt;&lt;h3 id=&quot;Given-n-non-negative-integers-a1-a2-&amp;#x2026;-an-where-each-represents-a-point-at-coordinate-i-ai-n-vertical-lines-are-drawn-such-that-the-two-endpoints-of-line-i-is-at-i-ai-and-i-0-Find-two-lines-which-together-with-x-axis-forms-a-container-such-that-the-container-contains-the-most-water&quot;&gt;&lt;a href=&quot;#Given-n-non-negative-integers-a1-a2-&amp;#x2026;-an-where-each-represents-a-point-at-coordinate-i-ai-n-vertical-lines-are-drawn-such-that-the-two-endpoints-of-line-i-is-at-i-ai-and-i-0-Find-two-lines-which-together-with-x-axis-forms-a-container-such-that-the-container-contains-the-most-water&quot; class=&quot;headerlink&quot; title=&quot;Given n non-negative integers a1, a2, &amp;#x2026;, an, where each represents a point at coordinate (i, ai). n vertical lines are drawn such that the two endpoints of line i is at (i, ai) and (i, 0). Find two lines, which together with x-axis forms a container, such that the container contains the most water.&quot;&gt;&lt;/a&gt;Given n non-negative integers a1, a2, &amp;#x2026;, an, where each represents a point at coordinate (i, ai). n vertical lines are drawn such that the two endpoints of line i is at (i, ai) and (i, 0). Find two lines, which together with x-axis forms a container, such that the container contains the most water.&lt;/h3&gt;&lt;p&gt;&amp;#x9898;&amp;#x76EE;&amp;#xFF1A;&amp;#x5BFB;&amp;#x627E;&amp;#x9762;&amp;#x79EF;&amp;#x7684;&amp;#x6700;&amp;#x5927;&amp;#x503C;&amp;#xFF0C;&amp;#x8FD9;&amp;#x4E2A;&amp;#x4E5F;&amp;#x6BD4;&amp;#x8F83;&amp;#x7B80;&amp;#x5355;&amp;#x3002;&amp;#x5FAA;&amp;#x73AF;&amp;#x6240;&amp;#x6709;&amp;#x7684;&amp;#xFF0C;&amp;#x627E;&amp;#x51FA;&amp;#x9762;&amp;#x79EF;&amp;#x6700;&amp;#x5927;&amp;#x7684;&amp;#x3002;&amp;#x5728;&amp;#x8FD9;&amp;#x91CC;&amp;#xFF0C;&amp;#x6211;&amp;#x53D1;&amp;#x73B0;&amp;#x5176;&amp;#x5B9E;&amp;#x6240;&amp;#x8C13;&amp;#x8D2A;&amp;#x5FC3;&amp;#x7B97;&amp;#x6CD5;&amp;#xFF0C;&amp;#x5C31;&amp;#x662F;&amp;#x8D70;&amp;#x5B8C;&amp;#x4E00;&amp;#x904D;&amp;#xFF0C;&amp;#x67E5;&amp;#x627E;&amp;#x6700;&amp;#x4F18;&amp;#x503C;&amp;#xFF0C;&amp;#x4E0D;&amp;#x8FC7;&amp;#x5728;&amp;#x5BFB;&amp;#x627E;&amp;#x7684;&amp;#x8FC7;&amp;#x7A0B;&amp;#x4E2D;&amp;#xFF0C;&amp;#x5E76;&amp;#x4E0D;&amp;#x662F;&amp;#x66B4;&amp;#x529B;&amp;#x6240;&amp;#x6709;&amp;#x60C5;&amp;#x51B5;&amp;#xFF0C;&amp;#x800C;&amp;#x662F;&amp;#x9488;&amp;#x5BF9;&amp;#x4E0D;&amp;#x540C;&amp;#x7684;&amp;#x73AF;&amp;#x5883;&amp;#xFF0C;&amp;#x6765;&amp;#x7701;&amp;#x7565;&amp;#x5F88;&amp;#x591A;&amp;#x4E0D;&amp;#x9700;&amp;#x8981;&amp;#x7684;&amp;#x60C5;&amp;#x51B5;&amp;#x3002;&amp;#x6BD4;&amp;#x5982;&amp;#x5728;&amp;#x6B64;&amp;#x9898;&amp;#x4E2D;&amp;#xFF0C;&amp;#x6211;&amp;#x4EEC;&amp;#x5C31;&amp;#x786E;&amp;#x5B9A;&amp;#x6700;&amp;#x540E;&amp;#x7684;&amp;#x9762;&amp;#x79EF;&amp;#x662F;&amp;#x6709;&amp;#x77ED;&amp;#x677F;&amp;#x7684;&amp;#x90A3;&amp;#x4E2A;&amp;#x9AD8;&amp;#x5EA6;&amp;#x6240;&amp;#x51B3;&amp;#x5B9A;&amp;#x7684;&amp;#xFF0C;&amp;#x6240;&amp;#x4EE5;&amp;#x5728;&amp;#x6BD4;&amp;#x8F83;&amp;#x7684;&amp;#x8FC7;&amp;#x7A0B;&amp;#x4E2D;&amp;#x5C31;&amp;#x662F;&amp;#x5728;&amp;#x76F8;&amp;#x5BF9;&amp;#x60C5;&amp;#x51B5;&amp;#x4E0B;&amp;#xFF0C;&amp;#x5FFD;&amp;#x7565;&amp;#x90A3;&amp;#x4E9B;&amp;#x77ED;&amp;#x677F;&amp;#x3002;&lt;/p&gt;
+&lt;p&gt;&amp;#x4EE3;&amp;#x7801;&amp;#x5982;&amp;#x4E0B;&amp;#xFF1A;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;c&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;maxArea&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt;* height, &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; heightSize)&lt;/span&gt; &lt;/span&gt;{
+    &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; head=&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,res=&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,tail=heightSize&lt;span class=&quot;number&quot;&gt;-1&lt;/span&gt;;
+    &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(tail&amp;gt;head){
+        &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; tempRes = (height[head]-height[tail]&amp;gt;&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;?height[tail]:height[head])*(tail-head);
+        res = tempRes-res&amp;gt;&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;?tempRes:res;
+        &lt;span class=&quot;comment&quot;&gt;//&amp;#x8FD9;&amp;#x8FB9;&amp;#x7684;&amp;#x6BD4;&amp;#x8F83;&amp;#x5373;&amp;#x662F;&amp;#x76F8;&amp;#x5BF9;&amp;#x60C5;&amp;#x51B5;&amp;#x4E0B;&amp;#xFF0C;&amp;#x9009;&amp;#x53D6;height&amp;#x9AD8;&amp;#x7684;&amp;#x90A3;&amp;#x5757;&amp;#x677F;&lt;/span&gt;
+        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt;(height[head]&amp;lt;height[tail]){
+            head++;
+        }&lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt;{
+            tail--;
+        }
+    }
+    return res;
+}
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&amp;#x1F3C6;&lt;br&gt;&amp;#x6076;&amp;#x8865;&amp;#x4E00;&amp;#x4E0B;&amp;#x4E4B;&amp;#x524D;&amp;#x7684;&amp;#x7B97;&amp;#x6CD5;&amp;#xFF0C;&amp;#x505A;&amp;#x5B8C;&amp;#x4E4B;&amp;#x540E;&amp;#x770B;&amp;#x4E86;&amp;#x5927;&amp;#x795E;&amp;#x89E3;&amp;#x6CD5;&amp;#xFF0C;&amp;#x81EA;&amp;#x5DF1;&amp;#x7406;&amp;#x89E3;&amp;#x4E0B;&amp;#xFF0C;&amp;#x8BB0;&amp;#x5F55;&amp;#x4E0B;&amp;#x6765;&amp;#x3002;&lt;br&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="leetcode" scheme="http://zuston.github.io/tags/leetcode/"/>
+    
+  </entry>
   
   <entry>
     <title>九月的一点总结</title>
