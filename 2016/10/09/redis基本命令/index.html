@@ -1,0 +1,316 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>redis基本命令 | 沙茶</title>
+  <meta name="author" content="沙茶">
+  
+  <meta name="description" content="&amp;#x1F3C6;">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="redis基本命令"/>
+  <meta property="og:site_name" content="沙茶"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="沙茶" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script src="/js/jquery.min.js"></script>
+
+  
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-84656112-1', 'zuston.github.com');
+  ga('send', 'pageview');
+</script>
+
+
+</head>
+
+
+<body>
+  <!--[if lte IE 8]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0027_Simplified Chinese.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." style='margin-left:auto;margin-right:auto;display: block;'/></a></div> <![endif]-->
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">沙茶</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <time datetime="2016-10-09T12:00:15.000Z"><a href="/2016/10/09/redis基本命令/">2016-10-09</a></time>
+      
+      
+  
+    <h1 class="title">redis基本命令</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>&#x1F3C6;<br><a id="more"></a></p>
+<h2 id="&#x57FA;&#x672C;&#x6570;&#x636E;&#x7ED3;&#x6784;"><a href="#&#x57FA;&#x672C;&#x6570;&#x636E;&#x7ED3;&#x6784;" class="headerlink" title="&#x57FA;&#x672C;&#x6570;&#x636E;&#x7ED3;&#x6784;"></a>&#x57FA;&#x672C;&#x6570;&#x636E;&#x7ED3;&#x6784;</h2><h3 id="&#x5B57;&#x7B26;&#x4E32;-strings"><a href="#&#x5B57;&#x7B26;&#x4E32;-strings" class="headerlink" title="&#x5B57;&#x7B26;&#x4E32; strings"></a>&#x5B57;&#x7B26;&#x4E32; strings</h3><pre><code class="c"><span class="built_in">set</span> online:count <span class="number">100</span>
+get online:count
+incr count
+incrby count <span class="number">4</span>
+</code></pre>
+<h3 id="&#x96C6;&#x5408;-set"><a href="#&#x96C6;&#x5408;-set" class="headerlink" title="&#x96C6;&#x5408; set"></a>&#x96C6;&#x5408; set</h3><p>&#x4E3B;&#x8981;&#x7528;&#x4E8E;&#x597D;&#x53CB;&#x5173;&#x7CFB;&#x64CD;&#x4F5C;&#xFF0C;&#x4EA4;&#x96C6;&#x5E76;&#x96C6;&#x90FD;&#x4E3A;o(1)</p>
+<pre><code class="c">sadd friends:zuston wei qiu yin chao
+sadd friends:wei qiu yin ruiding
+<span class="comment">// &#x6C42;&#x4EA4;&#x96C6;</span>
+sinter friends:zuston friends:wei 
+<span class="comment">// &#x6C42;&#x5DEE;&#x96C6;</span>
+sdiff friends:zuston friends:wei
+<span class="comment">// &#x6C42;&#x5E76;&#x96C6;</span>
+sunion friends:zuston friends:wei
+<span class="comment">// &#x83B7;&#x53D6;&#x6210;&#x5458;&#x6570;</span>
+scard friends:zuston
+<span class="comment">// &#x83B7;&#x53D6;&#x6240;&#x6709;&#x6210;&#x5458;</span>
+smembers friends:zuston
+<span class="comment">//&#x629B;&#x51FA;&#x4E00;&#x4E2A;&#x6210;&#x5458;&#xFF0C;&#x629B;&#x51FA;&#x5C31;&#x5220;&#x9664;</span>
+spop friends:zuston
+</code></pre>
+<h3 id="&#x6563;&#x5217;-hash"><a href="#&#x6563;&#x5217;-hash" class="headerlink" title="&#x6563;&#x5217; hash"></a>&#x6563;&#x5217; hash</h3><pre><code class="c"><span class="comment">// &#x50A8;&#x5B58;&#x4E00;&#x4E2A;&#x767B;&#x5F55;&#x540D;,&#x5373;&#x4E00;&#x5BF9;&#x591A;&#x7684;&#x5173;&#x7CFB;</span>
+hset user:loginName zuston jinxi32@<span class="number">163.</span>com shacha
+hgetall user:loginName
+
+&lt;!-- &#x5B58;&#x50A8;&#x5BF9;&#x8C61; --&gt;
+hmset user:zuston name <span class="string">&quot;zjf&quot;</span> age <span class="number">20</span> sex <span class="string">&apos;&#x7537;&apos;</span>
+hgetall user:zuston 
+hmget user:zuston name
+&lt;!-- &#x83B7;&#x53D6;key&#x7684;&#x6240;&#x6709;&#x5B57;&#x6BB5; --&gt;
+hkeys user:zuston
+&lt;!-- &#x83B7;&#x53D6;key&#x7684;&#x6240;&#x6709;&#x5B57;&#x6BB5;&#x7684;&#x503C; --&gt;
+hvals user:zuston
+</code></pre>
+<h3 id="&#x6709;&#x5E8F;&#x96C6;&#x5408;-sorted-set"><a href="#&#x6709;&#x5E8F;&#x96C6;&#x5408;-sorted-set" class="headerlink" title="&#x6709;&#x5E8F;&#x96C6;&#x5408; sorted set"></a>&#x6709;&#x5E8F;&#x96C6;&#x5408; sorted set</h3><p>&#x8FD9;&#x4E2A;&#x6570;&#x636E;&#x7ED3;&#x6784;&#x4E3B;&#x8981;&#x4E3A;ranking,&#x5B9E;&#x73B0;&#x6392;&#x884C;&#x699C;,&#x4EBA;&#x5458;&#x4E3A;&#x552F;&#x4E00;&#x7684;&#xFF0C;&#x5206;&#x6570;&#x53EF;&#x4EE5;&#x91CD;&#x590D;</p>
+<pre><code class="c">&lt;!-- &#x548C;&#x96C6;&#x5408;&#x4E00;&#x6837;&#xFF0C;&#x552F;&#x4E00;&#x533A;&#x522B;&#x7684;&#x662F;&#x7ED9;&#x6BCF;&#x4E00;&#x4E2A;&#x52A0;&#x6743;&#x91CD; --&gt;
+zadd name <span class="number">1</span> zuston
+zadd name <span class="number">2</span> wei
+zadd name <span class="number">1</span> yin
+zrange name <span class="number">0</span> <span class="number">10</span> 
+&lt;!-- &#x83B7;&#x53D6;&#x5168;&#x90E8;val&#x503C; --&gt;
+zrange name <span class="number">0</span> <span class="number">-1</span> withscores
+&lt;!--  --&gt;
+</code></pre>
+<h3 id="&#x5217;&#x8868;-list"><a href="#&#x5217;&#x8868;-list" class="headerlink" title="&#x5217;&#x8868; list"></a>&#x5217;&#x8868; list</h3><p>&#x7528;&#x4E8E;&#x7EF4;&#x6301;&#x4E00;&#x4E2A;&#x7A33;&#x5B9A;&#x7684;&#x6700;&#x65B0;&#x6210;&#x5458;&#xFF0C;&#x6BD4;&#x5982;&#x6700;&#x4E3A;&#x4EB2;&#x8FD1;&#x7684;10&#x4E2A;&#x6210;&#x5458;</p>
+<pre><code class="c">lpush latest:friends:zuston wei yin qiu cheng shacha
+lpop latest:friends:zuston
+&lt;!-- &#x7EF4;&#x6301;&#x4E00;&#x4E2A;&#x6700;&#x65B0;&#x7684;<span class="number">10</span>&#x4E2A;&#x6210;&#x5458; --&gt;
+ltrim latest:friends:zuston <span class="number">0</span> <span class="number">10</span>
+
+&lt;!-- &#x64CD;&#x4F5C;&#x4F1A;&#x88AB;&#x963B;&#x585E;&#xFF0C;&#x5982;&#x679C;&#x6307;&#x5B9A;&#x7684;&#x5217;&#x8868; key list1 &#x5B58;&#x5728;&#x6570;&#x636E;&#x5219;&#x4F1A;&#x8FD4;&#x56DE;&#x7B2C;&#x4E00;&#x4E2A;&#x5143;&#x7D20;&#xFF0C;&#x5426;&#x5219;&#x5728;&#x7B49;&#x5F85;<span class="number">100</span>&#x79D2;&#x540E;&#x4F1A;&#x8FD4;&#x56DE; nil &#x3002; --&gt;
+blpop list1 <span class="number">100</span>
+&lt;!-- &#x5835;&#x585E;&#x8FD4;&#x56DE;&#x6700;&#x540E;&#x4E00;&#x4E2A;&#x6210;&#x5458;,&#x5373;&#x4E3A;&#x961F;&#x5217;,timeout&#x6CA1;&#x6709;&#xFF0C;&#x5219;&#x5835;&#x585E; --&gt;
+brpop list1 timeout
+</code></pre>
+<h2 id="&#x7EC4;&#x5408;&#x64CD;&#x4F5C;"><a href="#&#x7EC4;&#x5408;&#x64CD;&#x4F5C;" class="headerlink" title="&#x7EC4;&#x5408;&#x64CD;&#x4F5C;"></a>&#x7EC4;&#x5408;&#x64CD;&#x4F5C;</h2><h3 id="&#x4E8B;&#x52A1;-transaction"><a href="#&#x4E8B;&#x52A1;-transaction" class="headerlink" title="&#x4E8B;&#x52A1; transaction"></a>&#x4E8B;&#x52A1; transaction</h3><p>&#x7528;&#x4E8E;&#x7EF4;&#x6301;&#x4E00;&#x4E2A;&#x7A33;&#x5B9A;&#x7684;&#x6700;&#x65B0;&#x6210;&#x5458;&#xFF0C;&#x6BD4;&#x5982;&#x6700;&#x4E3A;&#x4EB2;&#x8FD1;&#x7684;10&#x4E2A;&#x6210;&#x5458;</p>
+<pre><code class="c">multi
+<span class="built_in">set</span> key value
+exec
+</code></pre>
+<pre><code class="ruby">redis.multi()
+current = redis.get(<span class="string">&apos;powerlevel&apos;</span>)
+redis.set(<span class="string">&apos;powerlevel&apos;</span>, current + <span class="number">1</span>)
+redis.exec()
+</code></pre>
+<h3 id="&#x4F7F;&#x7528;&#x671F;&#x9650;-expiration"><a href="#&#x4F7F;&#x7528;&#x671F;&#x9650;-expiration" class="headerlink" title="&#x4F7F;&#x7528;&#x671F;&#x9650; expiration"></a>&#x4F7F;&#x7528;&#x671F;&#x9650; expiration</h3><p>redis&#x53EF;&#x4EE5;&#x6807;&#x8BB0;&#x4E00;&#x4E2A;&#x5173;&#x952E;&#x5B57;&#x7684;&#x8FC7;&#x671F;&#x65F6;&#x95F4;&#xFF0C;&#x5230;&#x671F;&#x81EA;&#x52A8;&#x5220;&#x9664;</p>
+<pre><code class="c">&lt;!-- &#x5341;&#x79D2;&#x540E;&#x5220;&#x9664; --&gt;
+expire online:count <span class="number">10</span>
+&lt;!-- &#x67E5;&#x770B;key&#x7684;&#x5B58;&#x6D3B;&#x65F6;&#x95F4; --&gt;
+ttl online:count
+</code></pre>
+<h3 id="&#x53D1;&#x5E03;&#x548C;&#x8BA2;&#x9605;-publication-and-subscription"><a href="#&#x53D1;&#x5E03;&#x548C;&#x8BA2;&#x9605;-publication-and-subscription" class="headerlink" title="&#x53D1;&#x5E03;&#x548C;&#x8BA2;&#x9605; publication and subscription"></a>&#x53D1;&#x5E03;&#x548C;&#x8BA2;&#x9605; publication and subscription</h3><pre><code class="c">subscribe news 
+&lt;!-- &#x53E6;&#x4E00;&#x5BA2;&#x6237;&#x7AEF;&#x6267;&#x884C; --&gt;
+public news &apos;earthquake in beijing&apos;
+</code></pre>
+
+      
+    </div>
+    <footer>
+      
+
+        
+        
+          <div class="alignright post-nav">
+            <em>下一篇: </em><a href="/2016/09/25/贪心算法/">贪心算法</a>
+          </div>
+          <div class="clearfix"></div>
+        
+
+        
+          <div class="copyright">
+            
+              <span class="claim">版权声明：自由转载-非商用-无演绎-保持署名 @ Creative Commons BY-NC-ND 3.0</span>
+            
+            
+              <span class="from-link">
+                <em>本文链接地址:</em>
+                <a href="/2016/10/09/redis基本命令/">
+                  http://zuston.github.io/2016/10/09/redis基本命令/
+                </a>
+              </span>
+            
+          </div>
+        
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/coding/">coding</a>
+  </div>
+
+        
+  <div class="addthis addthis_toolbox addthis_default_style">
+    
+    
+    
+      <a class="addthis_button_sinaweibo_like"></a>
+    
+    
+      <a class="addthis_button_linkedin"></a>
+    
+    
+    
+    <a class="addthis_counter addthis_pill_style"></a>
+  </div>
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js"></script>
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+<h2 class="title">评论</h2>
+
+ <!-- 多说评论框 start -->
+<div class="ds-thread" data-thread-key="2016/10/09/redis基本命令/" data-title="redis基本命令" data-url="http://zuston.github.io/2016/10/09/redis基本命令/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<div class="ds-recent-visitors" data-num-items="28" data-avatar-size="42" id="ds-recent-visitors"></div>
+
+<script type="text/javascript">
+    var duoshuoQuery = {short_name:"zuston"};
+        (function() {
+            var ds = document.createElement('script');
+            ds.type = 'text/javascript';ds.async = true;
+            ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            ds.charset = 'UTF-8';
+            (document.getElementsByTagName('head')[0]
+             || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+</script>
+<!-- 多说公共JS代码 end -->
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="text" name="q" results="0" placeholder="Suche">
+    <i class="icon-search"></i>
+    <input type="hidden" name="q" value="site:zuston.github.io">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/coding/">coding</a><small>2</small></li>
+  
+    <li><a href="/tags/leetcode/">leetcode</a><small>1</small></li>
+  
+    <li><a href="/tags/life/">life</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  <div class="trace-invest">
+    <span>
+        <a href="http://www.github.com/zuston" target="_blank">小代码站点 :</br>github.com/zuston</a>
+    </span>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Neueste Artikel</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2016/10/09/redis基本命令/">redis基本命令</a>
+      </li>
+    
+      <li>
+        <a href="/2016/09/25/贪心算法/">贪心算法</a>
+      </li>
+    
+      <li>
+        <a href="/2016/09/23/九月的一点总结/">九月的一点总结</a>
+      </li>
+    
+      <li>
+        <a href="/2016/04/26/夏至未至的上海/">夏至未至的上海</a>
+      </li>
+    
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <div id="go-pg-top"><i class="icon-arrow-up"></i></div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 沙茶
+  
+  <br>
+  <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+</div>
+<div class="clearfix"></div>
+</footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/page.js"></script>
+
+
+</body>
+
+</html>
