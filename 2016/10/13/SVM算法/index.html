@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>SVM算法 | 沙茶</title>
+  <meta name="author" content="沙茶">
+  
+  <meta name="description" content="&amp;#x1F3C3;">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="SVM算法"/>
+  <meta property="og:site_name" content="沙茶"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="沙茶" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script src="/js/jquery.min.js"></script>
+
+  
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-84656112-1', 'zuston.github.com');
+  ga('send', 'pageview');
+</script>
+
+
+</head>
+
+
+<body>
+  <!--[if lte IE 8]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0027_Simplified Chinese.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." style='margin-left:auto;margin-right:auto;display: block;'/></a></div> <![endif]-->
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">沙茶</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <time datetime="2016-10-13T06:34:28.000Z"><a href="/2016/10/13/SVM算法/">2016-10-13</a></time>
+      
+      
+  
+    <h1 class="title">SVM算法</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>&#x1F3C3;<br><a id="more"></a><br>&#x8FD9;&#x4E00;&#x5468;&#x521A;&#x597D;&#x60F3;&#x8981;&#x5B66;&#x4E60;&#x4E0B;&#x673A;&#x5668;&#x5B66;&#x4E60;&#x4EE5;&#x53CA;&#x6570;&#x636E;&#x5206;&#x6790;&#x8FD9;&#x4E00;&#x5757;&#xFF0C;&#x6B63;&#x597D;&#x4E0B;&#x5468;&#x9700;&#x8981;&#x8BB2;&#x4E00;&#x4E0B;&#x7B97;&#x6CD5;&#xFF0C;&#x5C31;&#x60F3;&#x91C7;&#x7528;svm&#x7B97;&#x6CD5;&#x6765;&#x8BB2;&#x4E00;&#x4E0B;&#x3002;&#x770B;&#x7684;&#x8FD8;&#x662F;&#x6BD4;&#x8F83;&#x6D45;&#x663E;&#x7684;&#xFF0C;&#x5148;&#x8BB0;&#x4E0B;&#x6765;&#x5907;&#x5FD8;</p>
+<h3 id="&#x7B97;&#x6CD5;&#x7B80;&#x8FF0;"><a href="#&#x7B97;&#x6CD5;&#x7B80;&#x8FF0;" class="headerlink" title="&#x7B97;&#x6CD5;&#x7B80;&#x8FF0;"></a>&#x7B97;&#x6CD5;&#x7B80;&#x8FF0;</h3><p>svm&#x7B97;&#x6CD5;&#x7B97;&#x662F;&#x76D1;&#x7763;&#x5B66;&#x4E60;&#xFF0C;&#x5728;&#x673A;&#x5668;&#x5B66;&#x4E60;&#x91CC;&#x9762;&#x662F;&#x4E00;&#x4E2A;&#x5206;&#x7C7B;&#x5668;&#x3002;<br><br>&#x4E3E;&#x4E2A;&#x6817;&#x5B50;&#xFF0C;&#x8FD8;&#x662F;&#x6CBF;&#x7528;&#x300A;&#x673A;&#x5668;&#x5B66;&#x4E60;&#x5B9E;&#x6218;&#x300B;&#x8FD9;&#x672C;&#x4E66;&#x91CC;&#x9762;&#x7684;&#x8BB2;&#x7684;knn&#x7B97;&#x6CD5;&#x7684;&#x90A3;&#x4E2A;&#x6817;&#x5B50;&#x3002;&#x5C31;&#x662F;&#x5BF9;&#x4E8E;&#x4E00;&#x90E8;&#x7535;&#x5F71;&#x662F;&#x6B66;&#x6253;&#x7247;&#x8FD8;&#x662F;&#x7231;&#x60C5;&#x7247;&#x7684;&#x5224;&#x5B9A;&#x3002;&#x5728;&#x8FD9;&#x91CC;&#xFF0C;&#x6211;&#x4EEC;&#x7528;&#x51FA;&#x73B0;&#x6B66;&#x6253;&#x7684;&#x573A;&#x666F;&#x548C;&#x51FA;&#x73B0;&#x543B;&#x620F;&#x4EE5;&#x53CA;&#x5E8A;&#x620F;&#x7684;&#x573A;&#x666F;&#x6570;&#x6765;&#x8FDB;&#x884C;&#x4F5C;&#x4E3A;&#x5206;&#x7C7B;&#x7684;&#x4F9D;&#x636E;&#xFF0C;&#x90A3;&#x4E48;&#x5BF9;&#x4E8E;&#x6BCF;&#x90E8;&#x7535;&#x5F71;&#x90FD;&#x4F1A;&#x6709;&#x8FD9;&#x4E48;&#x4E24;&#x4E2A;&#x7279;&#x5F81;&#x503C;&#x3002;&#x5BF9;&#x4E8E;&#x4ED6;&#x4EEC;&#x5230;&#x5E95;&#x662F;&#x6B66;&#x6253;&#x7247;&#x8FD8;&#x662F;&#x7231;&#x60C5;&#x7247;&#x7684;&#x7C7B;&#x522B;&#x5462;&#xFF0C;&#x6211;&#x4EEC;&#x7528;&#x4E00;&#x4E2A;label&#x5411;&#x91CF;&#x6765;&#x4E00;&#x4E00;&#x5BF9;&#x5E94;&#x8868;&#x793A;&#x4ED6;&#x4EEC;&#x7684;&#x7C7B;&#x522B;&#x3002;&#x6BD4;&#x5982;[1,0,1,1],&#x8FD9;&#x91CC;&#x7528;1&#x6765;&#x8868;&#x793A;&#x6B66;&#x6253;&#xFF0C;&#x7528;0&#x6765;&#x8868;&#x793A;&#x7231;&#x60C5;&#x7247;&#x3002;</p>
+<pre><code class="python"><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="comment"># &#x8FD9;&#x91CC;&#x7684;label&#x5C31;&#x662F;&#x5BF9;&#x4E8E;&#x6BCF;&#x4E00;&#x90E8;&#x7535;&#x5F71;&#x7684;&#x6807;&#x8BC6;&#xFF0C;&#x8BAD;&#x7EC3;&#x96C6;&#x7684;&#x8BDD;&#x9700;&#x8981;&#x6570;&#x636E;&#x6709;&#x6807;&#x8BC6;&#xFF0C;&#x6765;&#x8FBE;&#x5230;&#x5206;&#x7C7B;&#x7684;&#x76EE;&#x6807;</span>
+label = np.array([[<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>]])
+dataset = [[<span class="number">23</span>,<span class="number">45</span>],[<span class="number">35</span>,<span class="number">23</span>],[<span class="number">45</span>,<span class="number">56</span>],[<span class="number">45</span>,<span class="number">23</span>]]
+training_set = np.array(dataset)
+</code></pre>
+<p>&#x90A3;&#x4E48;&#x5BF9;&#x4E8E;trainning_set&#x8FD9;&#x4E2A;&#x6570;&#x636E;&#x96C6;&#x7684;&#x8BDD;&#x662F;&#x80FD;&#x591F;&#x5728;&#x4E8C;&#x7EF4;&#x7684;&#x5E73;&#x9762;&#x4E0A;&#x8FDB;&#x884C;&#x8868;&#x793A;&#x7684;&#xFF0C;&#x8FD9;&#x91CC;&#x719F;&#x6089;&#x7684;&#x8BDD;&#x53EF;&#x4EE5;&#x7528;matplotlib&#x6765;&#x8FDB;&#x884C;&#x5C55;&#x793A;&#x89C2;&#x5BDF;&#x3002;&#x6B64;&#x5904;&#x6211;&#x4EEC;&#x5C31;&#x7528;&#x4E8C;&#x7EF4;&#x6765;&#x8FDB;&#x884C;&#x63CF;&#x8FF0;&#xFF0C;&#x5BF9;&#x4E8E;&#x8FD9;&#x4E9B;&#x70B9;&#x5206;&#x597D;&#x7C7B;&#x7684;&#x70B9;&#xFF0C;&#x6211;&#x4EEC;&#x80FD;&#x591F;&#x7528;&#x4E00;&#x6761;&#x7EBF;&#x6765;&#x8FDB;&#x884C;&#x533A;&#x5206;&#x4ED6;&#x4EEC;&#xFF0C;&#x4ECE;&#x800C;&#x80FD;&#x591F;&#x9884;&#x6D4B;&#x63A5;&#x4E0B;&#x6765;&#x7684;&#x6D4B;&#x8BD5;&#x96C6;&#xFF0C;&#x5E76;&#x7ED9;&#x4ED6;&#x4EEC;&#x6253;&#x4E0A;&#x662F;&#x6B66;&#x6253;&#x7247;&#x8FD8;&#x662F;&#x7231;&#x60C5;&#x7247;&#x7684;&#x8BBA;&#x65AD;&#x3002;<br><br>svm&#x7B97;&#x6CD5;&#x5C31;&#x662F;&#x80FD;&#x591F;&#x5728;&#x7ED9;&#x7EBF;&#x6027;&#x53EF;&#x5206;&#x7684;&#x6570;&#x636E;&#x6216;&#x8005;&#x662F;&#x7EBF;&#x6027;&#x4E0D;&#x53EF;&#x5206;&#x7684;&#x6570;&#x636E;&#x8FDB;&#x884C;&#x5206;&#x7C7B;&#xFF0C;&#x81F3;&#x4E8E;&#x62DF;&#x5408;&#x7684;&#x51FD;&#x6570;&#x63A5;&#x4E0B;&#x6765;&#x8BF4;&#x3002;&#x8FD8;&#x662F;&#x9610;&#x8FF0;&#x4E0B;&#x4E8C;&#x7EF4;&#x7684;&#x62DF;&#x5408;&#x7EBF;&#x6027;&#x7684;&#x51FD;&#x6570;&#x7684;&#x601D;&#x8DEF;&#x3002;&#x5BF9;&#x4E8E;&#x4E00;&#x7EC4;&#x5728;&#x4E8C;&#x7EF4;&#x5E73;&#x9762;&#x4E0A;&#x7EBF;&#x6027;&#x53EF;&#x5206;&#x7684;&#x6570;&#x636E;&#x6765;&#x8BF4;&#xFF0C;&#x6211;&#x4EEC;&#x8981;&#x627E;&#x5230;&#x8FD9;&#x4E24;&#x7EC4;&#x6570;&#x636E;&#x7684;&#x660E;&#x786E;&#x5206;&#x5272;&#x70B9;&#xFF0C;&#x4ECE;&#x800C;&#x627E;&#x5230;&#x4ED6;&#x4EEC;&#x7684;&#x652F;&#x6301;&#x5411;&#x91CF;&#xFF0C;&#x4ECE;&#x800C;&#x5728;&#x6700;&#x5927;&#x5316;&#x4E24;&#x7EC4;&#x652F;&#x6301;&#x5411;&#x91CF;&#x95F4;&#x7684;&#x8DDD;&#x79BB;&#xFF0C;&#x8FD9;&#x6837;&#x7684;&#x8BDD;&#xFF0C;&#x5BF9;&#x4E8E;&#x8D85;&#x5E73;&#x9762;&#x7684;&#x4F4D;&#x7F6E;&#x57FA;&#x672C;&#x5C31;&#x786E;&#x5B9A;&#x4E86;&#x3002;&#x53EA;&#x8981;&#x5728;&#x4E24;&#x7EC4;&#x6700;&#x5927;&#x5316;&#x7684;&#x652F;&#x6301;&#x5411;&#x91CF;&#x4E2D;&#x95F4;&#x5C31;&#x662F;&#x8D85;&#x5E73;&#x9762;&#x7684;&#x4F4D;&#x7F6E;&#x3002;(&#x773C;&#x89C1;&#x7740;&#x8981;&#x7761;&#x89C9;&#x4E86;&#xFF0C;&#x8FD8;&#x662F;&#x8BB0;&#x4E0B;&#x4E9B;&#x81EA;&#x5DF1;&#x61C2;&#x7684;&#x5427;)<br><br><img src="/2016/10/13/SVM&#x7B97;&#x6CD5;/a.jpg" alt="&#x652F;&#x6301;&#x5411;&#x91CF;&#x548C;&#x8D85;&#x5E73;&#x9762;&#x4F4D;&#x7F6E;"><br>&#x90A3;&#x4E48;&#x5BF9;&#x4E8E;&#x7EBF;&#x6027;&#x4E0D;&#x53EF;&#x5206;&#x7684;&#x6570;&#x636E;&#x96C6;&#xFF0C;&#x5176;&#x5B9E;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x6620;&#x5C04;&#x5230;&#x9AD8;&#x7EF4;&#x6765;&#x770B;&#x3002;&#xFF08;&#x4E3E;&#x4E2A;&#x4F8B;&#x5B50;&#xFF0C;&#x5728;&#x4E8C;&#x7EF4;&#x4E0B;&#xFF0C;&#x6211;&#x4EEC;&#x7684;&#x7EBF;&#x6027;&#x5206;&#x5272;&#x662F;&#x7EBF;&#x3002;&#x5728;&#x4E09;&#x7EF4;&#x4E0B;&#xFF0C;&#x6211;&#x4EEC;&#x7684;&#x8D85;&#x5E73;&#x9762;&#x662F;&#x4E2A;&#x9762;&#xFF0C;&#x90A3;&#x4E48;&#x4F9D;&#x6B64;&#x53EF;&#x63A8;&#xFF0C;&#x5728;n&#x7EF4;&#x4E0B;&#xFF0C;&#x8D85;&#x5E73;&#x9762;&#x662F;&#x548C;n-1&#x7EF4;&#x7684;&#x4E1C;&#x897F;&#xFF0C;&#x8FD9;&#x91CC;&#x5148;&#x6253;&#x4E2A;&#x9884;&#x9632;&#x9488;&#xFF0C;&#x77E5;&#x6653;&#x4E0B;&#xFF09;&#x3002;&#x4F4E;&#x7EF4;&#x5EA6;&#x7684;&#x7EBF;&#x6027;&#x4E0D;&#x53EF;&#x5206;&#xFF0C;&#x5176;&#x5B9E;&#x5728;&#x9AD8;&#x7EF4;&#x770B;&#x6765;&#x53EA;&#x662F;&#x538B;&#x7F29;&#x91CD;&#x53E0;&#x4E86;&#x4E00;&#x4E2A;&#x5750;&#x6807;&#x8F74;&#x800C;&#x5DF2;&#xFF0C;&#x56E0;&#x4E3A;&#x4F9D;&#x7167;&#x6838;&#x51FD;&#x6570;&#xFF0C;&#x5176;&#x5B9E;&#x53EF;&#x4EE5;&#x62C9;&#x4F38;&#x4E00;&#x7EF4;&#xFF0C;&#x4ECE;&#x800C;&#x5728;&#x8FD9;&#x4E00;&#x7EF4;&#x5EA6;&#x5B58;&#x5728;&#x8D85;&#x5E73;&#x9762;&#x3002;&#x6240;&#x4EE5;&#x4EFB;&#x610F;&#x7684;&#x6570;&#x636E;&#x96C6;&#x90FD;&#x662F;&#x7EBF;&#x6027;&#x53EF;&#x5206;&#x7684;&#xFF0C;&#x53EA;&#x8981;&#x627E;&#x5230;&#x5408;&#x9002;&#x7684;&#x8D85;&#x5E73;&#x9762;&#x3002;<br><br><img src="/2016/10/13/SVM&#x7B97;&#x6CD5;/ae.png" alt="&#x4E8C;&#x7EF4;&#x4E0B;&#x7684;&#x7EBF;&#x6027;&#x4E0D;&#x53EF;&#x5206;&#x56FE;&#x50CF;"><br><img src="/2016/10/13/SVM&#x7B97;&#x6CD5;/g.gif" alt="&#x9AD8;&#x7EF4;&#x4E0B;&#x53D8;&#x6210;&#x7684;&#x7EBF;&#x6027;&#x53EF;&#x5206;&#x56FE;&#x50CF;"><br>&#x5728;&#x56DE;&#x5230;&#x4E8C;&#x7EF4;&#x7684;&#x73AF;&#x5883;&#x4E0B;&#xFF0C;&#x5047;&#x8BBE;&#x6570;&#x636E;&#x662F;&#x7EBF;&#x6027;&#x53EF;&#x5206;&#x7684;&#xFF0C;&#x6211;&#x4EEC;&#x62DF;&#x5408;&#x7684;&#x51FD;&#x6570;&#x90A3;&#x4E48;&#x5BF9;&#x4E8E;label&#x662F;&#x5982;&#x4F55;&#x5224;&#x5B9A;&#x7684;&#x5462;&#xFF0C;&#x8BEF;&#x5DEE;&#x5927;&#x4E0D;&#x5927;&#x5462;&#xFF1F;&#x8FD9;&#x91CC;&#x5C31;&#x662F;&#x4E00;&#x4E2A;&#x7EBF;&#x6027;&#x56DE;&#x5F52;&#x7684;&#x95EE;&#x9898;&#xFF0C;&#x5BF9;&#x4E8E;&#x56DE;&#x5F52;&#x51FD;&#x6570;&#x6211;&#x4EEC;&#x4E00;&#x822C;&#x91C7;&#x7528;&#x4E00;&#x4E2A;&#x4E24;&#x4E2A;&#x65E0;&#x7A77;&#x6700;&#x540E;&#x8D8B;&#x8FD1;&#x4E8E;&#x4E24;&#x4E2A;&#x503C;&#x7684;&#x51FD;&#x6570;&#xFF0C;&#x6765;&#x505A;sig&#x51FD;&#x6570;&#x3002;&#x610F;&#x601D;&#x5C31;&#x662F;&#x8BF4;&#xFF0C;&#x53EA;&#x8981;&#x8FDC;&#x79BB;&#x90A3;&#x4E2A;&#x5206;&#x754C;&#x70B9;&#xFF08;0.5&#xFF09;&#xFF0C;&#x5C31;&#x80FD;&#x591F;&#x6700;&#x5927;&#x7A0B;&#x5EA6;&#x9884;&#x6D4B;&#xFF0C;&#x8BEF;&#x5DEE;&#x51CF;&#x5C0F;&#x3002;<br><img src="/2016/10/13/SVM&#x7B97;&#x6CD5;/b.png" alt="&#x56DE;&#x5F52;&#x51FD;&#x6570;"><br><img src="/2016/10/13/SVM&#x7B97;&#x6CD5;/c.png" alt="&#x56DE;&#x5F52;&#x51FD;&#x6570;&#x56FE;&#x50CF;"> </p>
+<h3 id="&#x9644;&#x4E0A;svm&#x7B97;&#x6CD5;&#x5B9E;&#x4F8B;&#x548C;&#x8BAD;&#x7EC3;&#x96C6;&#x548C;&#x6D4B;&#x8BD5;&#x96C6;"><a href="#&#x9644;&#x4E0A;svm&#x7B97;&#x6CD5;&#x5B9E;&#x4F8B;&#x548C;&#x8BAD;&#x7EC3;&#x96C6;&#x548C;&#x6D4B;&#x8BD5;&#x96C6;" class="headerlink" title="&#x9644;&#x4E0A;svm&#x7B97;&#x6CD5;&#x5B9E;&#x4F8B;&#x548C;&#x8BAD;&#x7EC3;&#x96C6;&#x548C;&#x6D4B;&#x8BD5;&#x96C6;"></a>&#x9644;&#x4E0A;svm&#x7B97;&#x6CD5;&#x5B9E;&#x4F8B;&#x548C;&#x8BAD;&#x7EC3;&#x96C6;&#x548C;&#x6D4B;&#x8BD5;&#x96C6;</h3><p><a href="https://github.com/zuston/code-library/blob/master/ml-basic-algorithm/svm/sklean-svm.py" target="_blank" rel="external">https://github.com/zuston/code-library/blob/master/ml-basic-algorithm/svm/sklean-svm.py</a></p>
+
+      
+    </div>
+    <footer>
+      
+
+        
+        
+          <div class="alignright post-nav">
+            <em>下一篇: </em><a href="/2016/10/09/redis基本命令/">redis基本命令</a>
+          </div>
+          <div class="clearfix"></div>
+        
+
+        
+          <div class="copyright">
+            
+              <span class="claim">版权声明：自由转载-非商用-无演绎-保持署名 @ Creative Commons BY-NC-ND 3.0</span>
+            
+            
+              <span class="from-link">
+                <em>本文链接地址:</em>
+                <a href="/2016/10/13/SVM算法/">
+                  http://zuston.github.io/2016/10/13/SVM算法/
+                </a>
+              </span>
+            
+          </div>
+        
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/ml/">ml</a>
+  </div>
+
+        
+  <div class="addthis addthis_toolbox addthis_default_style">
+    
+    
+    
+      <a class="addthis_button_sinaweibo_like"></a>
+    
+    
+      <a class="addthis_button_linkedin"></a>
+    
+    
+    
+    <a class="addthis_counter addthis_pill_style"></a>
+  </div>
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js"></script>
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+<h2 class="title">评论</h2>
+
+ <!-- 多说评论框 start -->
+<div class="ds-thread" data-thread-key="2016/10/13/SVM算法/" data-title="SVM算法" data-url="http://zuston.github.io/2016/10/13/SVM算法/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<div class="ds-recent-visitors" data-num-items="28" data-avatar-size="42" id="ds-recent-visitors"></div>
+
+<script type="text/javascript">
+    var duoshuoQuery = {short_name:"zuston"};
+        (function() {
+            var ds = document.createElement('script');
+            ds.type = 'text/javascript';ds.async = true;
+            ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            ds.charset = 'UTF-8';
+            (document.getElementsByTagName('head')[0]
+             || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+</script>
+<!-- 多说公共JS代码 end -->
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="text" name="q" results="0" placeholder="Suche">
+    <i class="icon-search"></i>
+    <input type="hidden" name="q" value="site:zuston.github.io">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/coding/">coding</a><small>2</small></li>
+  
+    <li><a href="/tags/leetcode/">leetcode</a><small>1</small></li>
+  
+    <li><a href="/tags/life/">life</a><small>1</small></li>
+  
+    <li><a href="/tags/ml/">ml</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  <div class="trace-invest">
+    <span>
+        <a href="http://www.github.com/zuston" target="_blank">小代码站点 :</br>github.com/zuston</a>
+    </span>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Neueste Artikel</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2016/10/13/SVM算法/">SVM算法</a>
+      </li>
+    
+      <li>
+        <a href="/2016/10/09/redis基本命令/">redis基本命令</a>
+      </li>
+    
+      <li>
+        <a href="/2016/09/25/贪心算法/">贪心算法</a>
+      </li>
+    
+      <li>
+        <a href="/2016/09/23/九月的一点总结/">九月的一点总结</a>
+      </li>
+    
+      <li>
+        <a href="/2016/04/26/夏至未至的上海/">夏至未至的上海</a>
+      </li>
+    
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <div id="go-pg-top"><i class="icon-arrow-up"></i></div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 沙茶
+  
+  <br>
+  <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+</div>
+<div class="clearfix"></div>
+</footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/page.js"></script>
+
+
+</body>
+
+</html>
