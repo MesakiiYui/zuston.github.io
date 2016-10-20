@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://zuston.github.io/"/>
-  <updated>2016-10-13T16:18:08.000Z</updated>
+  <updated>2016-10-20T14:09:50.000Z</updated>
   <id>http://zuston.github.io/</id>
   
   <author>
@@ -14,6 +14,77 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>k-means和knn</title>
+    <link href="http://zuston.github.io/2016/10/20/k-means%E5%92%8Cknn/"/>
+    <id>http://zuston.github.io/2016/10/20/k-means和knn/</id>
+    <published>2016-10-20T13:50:23.000Z</published>
+    <updated>2016-10-20T14:09:50.000Z</updated>
+    
+    <content type="html">&lt;p&gt;&amp;#x1F3C6;&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;knn&quot;&gt;&lt;a href=&quot;#knn&quot; class=&quot;headerlink&quot; title=&quot;knn&quot;&gt;&lt;/a&gt;knn&lt;/h2&gt;&lt;p&gt;knn&amp;#x662F;&amp;#x6570;&amp;#x636E;&amp;#x5206;&amp;#x6790;&amp;#x7684;&amp;#x4E2D;&amp;#x5F88;&amp;#x7B80;&amp;#x5355;&amp;#x7684;&amp;#x4E00;&amp;#x79CD;&amp;#x5206;&amp;#x7C7B;&amp;#x7B97;&amp;#x6CD5;&amp;#xFF0C;&amp;#x5BF9;&amp;#x4E8E;&amp;#x4E00;&amp;#x7EC4;&amp;#x5177;&amp;#x6709;n&amp;#x4E2A;&amp;#x7279;&amp;#x5F81;&amp;#x5143;&amp;#x7D20;&amp;#x7684;&amp;#x6570;&amp;#x636E;&amp;#x96C6;&amp;#xFF0C;&amp;#x5728;&amp;#x7EBF;&amp;#x6027;&amp;#x53EF;&amp;#x5206;&amp;#x7684;&amp;#x60C5;&amp;#x51B5;&amp;#x4E0B;&amp;#xFF0C;&amp;#x8FD0;&amp;#x7528;knn&amp;#x6765;&amp;#x8FDB;&amp;#x884C;&amp;#x5206;&amp;#x7C7B;&amp;#x3002;&amp;#x5176;&amp;#x5B9E;&amp;#x73B0;&amp;#x5B9E;&amp;#x60C5;&amp;#x51B5;&amp;#x4E0B;&amp;#xFF0C;&amp;#x91C7;&amp;#x7528;&amp;#x7684;&amp;#x4E0D;&amp;#x662F;&amp;#x5F88;&amp;#x591A;&amp;#xFF0C;&amp;#x6BD4;&amp;#x5982;&amp;#x9A8C;&amp;#x8BC1;&amp;#x7801;&amp;#x8BC6;&amp;#x522B;&amp;#x91C7;&amp;#x7528;knn&amp;#x5C31;&amp;#x8BC6;&amp;#x522B;&amp;#x7387;&amp;#x5F88;&amp;#x4F4E;&amp;#x3002;&amp;#x5E76;&amp;#x4E0D;&amp;#x662F;&amp;#x4F18;&amp;#x5316;&amp;#x95EE;&amp;#x9898;&amp;#xFF0C;&amp;#x800C;&amp;#x662F;&amp;#x7B97;&amp;#x6CD5;&amp;#x672C;&amp;#x8EAB;&amp;#x7684;&amp;#x5C40;&amp;#x9650;&amp;#x6027;&amp;#x3002;&lt;br&gt;&lt;br&gt;knn&amp;#x7B97;&amp;#x6CD5;&amp;#x662F;&amp;#x8BF4;&amp;#x5BF9;&amp;#x4E8E;&amp;#x4E00;&amp;#x7CFB;&amp;#x5217;&amp;#x5DF2;&amp;#x7ECF;&amp;#x6253;&amp;#x597D;&amp;#x6807;&amp;#x7B7E;&amp;#x7684;&amp;#x70B9;&amp;#xFF0C;&amp;#x5BF9;&amp;#x4E8E;&amp;#x4E0B;&amp;#x4E00;&amp;#x4E2A;&amp;#x8981;&amp;#x9884;&amp;#x6D4B;&amp;#x7684;&amp;#x70B9;&amp;#xFF0C;&amp;#x5219;&amp;#x7528;&amp;#x8FD9;&amp;#x4E2A;&amp;#x70B9;&amp;#x4E0E;&amp;#x6240;&amp;#x6709;&amp;#x5DF2;&amp;#x6709;label&amp;#x7684;&amp;#x70B9;&amp;#x6765;&amp;#x8FDB;&amp;#x884C;&amp;#x8DDD;&amp;#x79BB;&amp;#xFF08;distance&amp;#xFF09;&amp;#x6BD4;&amp;#x8F83;&amp;#xFF0C;&amp;#x5C06;distance&amp;#x6700;&amp;#x5C0F;&amp;#x7684;k&amp;#x4E2A;&amp;#x70B9;&amp;#x53D6;&amp;#x51FA;&amp;#x6765;&amp;#xFF0C;&amp;#x67E5;&amp;#x770B;&amp;#x4ED6;&amp;#x4EEC;&amp;#x7684;label&amp;#x7684;&amp;#x79CD;&amp;#x7C7B;&amp;#x6700;&amp;#x591A;&amp;#x7684;&amp;#x90A3;&amp;#x4E2A;&amp;#xFF0C;&amp;#x5C31;&amp;#x662F;&amp;#x9884;&amp;#x6D4B;&amp;#x7684;&amp;#x7ED3;&amp;#x679C;&lt;br&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#coding:utf-8&lt;/span&gt;
+&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; numpy &lt;span class=&quot;keyword&quot;&gt;as&lt;/span&gt; np
+&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; matplotlib.pyplot &lt;span class=&quot;keyword&quot;&gt;as&lt;/span&gt; plt
+
+&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;knn&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(exmpleSet,dataset,labelset,k)&lt;/span&gt;:&lt;/span&gt;
+        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; len(dataset)!=len(labelset):
+            &lt;span class=&quot;keyword&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&amp;apos;&amp;#x68C0;&amp;#x67E5;&amp;#x53C2;&amp;#x6570;&amp;#xFF0C;&amp;#x6807;&amp;#x8BB0;&amp;#x6570;&amp;#x548C;&amp;#x6570;&amp;#x636E;&amp;#x96C6;&amp;#x4E0D;&amp;#x5BF9;&amp;#x7B49;&amp;apos;&lt;/span&gt;
+            &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt;
+
+        dset = np.array(dataset)
+        &lt;span class=&quot;comment&quot;&gt;# &amp;#x4E00;&amp;#x7EF4;&amp;#x6570;&amp;#x7EC4;&lt;/span&gt;
+        eset = np.array(exmpleSet)
+
+        res = (((dset-eset)**&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;).sum(axis=&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;))**&lt;span class=&quot;number&quot;&gt;0.5&lt;/span&gt;
+        index = np.argsort(res)
+        resCount = {&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;:&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;:&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;}
+        &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; c &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; range(k):
+            labelFlag = labelset[index[c]]
+            resCount[labelFlag] += &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;
+
+        &lt;span class=&quot;comment&quot;&gt;# print resCount&lt;/span&gt;
+        &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; resCount[&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;]&amp;gt;resCount[&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;] &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;
+
+&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(exmpleSet,data,labelset,predictLabel)&lt;/span&gt;:&lt;/span&gt;
+    mark = [&lt;span class=&quot;string&quot;&gt;&amp;apos;or&amp;apos;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&amp;apos;ob&amp;apos;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&amp;apos;og&amp;apos;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&amp;apos;ok&amp;apos;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&amp;apos;^r&amp;apos;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&amp;apos;+r&amp;apos;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&amp;apos;sr&amp;apos;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&amp;apos;dr&amp;apos;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&amp;apos;&amp;lt;r&amp;apos;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&amp;apos;pr&amp;apos;&lt;/span&gt;]
+    index=&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; td &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; data:
+        plt.plot(float(td[&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;])/&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;,float(td[&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;])/&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;,mark[labelset[index]],markersize=&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;)
+        index += &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;
+    plt.plot(float(exmpleSet[&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;])/&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;,float(exmpleSet[&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;])/&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;,&lt;span class=&quot;string&quot;&gt;&amp;apos;pr&amp;apos;&lt;/span&gt;,markersize=&lt;span class=&quot;number&quot;&gt;15&lt;/span&gt;)
+    plt.show()
+
+&lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; __name__ == &lt;span class=&quot;string&quot;&gt;&amp;apos;__main__&amp;apos;&lt;/span&gt;:
+    &lt;span class=&quot;string&quot;&gt;&amp;apos;&amp;apos;&amp;apos;
+    &amp;#x7535;&amp;#x5F71;&amp;#x573A;&amp;#x666F;&amp;#x7684;&amp;#x5224;&amp;#x65AD;&amp;#xFF1A;x&amp;#x53C2;&amp;#x6570;&amp;#x4E3A;&amp;#x6253;&amp;#x6597;&amp;#x51FA;&amp;#x73B0;&amp;#x573A;&amp;#x666F;&amp;#x6B21;&amp;#x6570;
+                 y&amp;#x53C2;&amp;#x6570;&amp;#x4E3A;&amp;#x543B;&amp;#x620F;&amp;#x51FA;&amp;#x73B0;&amp;#x573A;&amp;#x666F;&amp;#x6B21;&amp;#x6570;
+                 labelset &amp;#x6807;&amp;#x8BB0;&amp;#x4E3A;0&amp;#x4E3A;&amp;#x6253;&amp;#x6597;&amp;#x620F;&amp;#xFF0C;1&amp;#x4E3A;&amp;#x7231;&amp;#x60C5;&amp;#x620F;
+                 &amp;#x6765;&amp;#x81EA;&amp;#x300A;machine learning in action&amp;#x300B;
+    &amp;apos;&amp;apos;&amp;apos;&lt;/span&gt;
+    exmpleSet = [&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;]
+    dataset = [[&lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;],[&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;],[&lt;span class=&quot;number&quot;&gt;45&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;32&lt;/span&gt;],[&lt;span class=&quot;number&quot;&gt;78&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;34&lt;/span&gt;],[&lt;span class=&quot;number&quot;&gt;9&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;18&lt;/span&gt;],[&lt;span class=&quot;number&quot;&gt;23&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;45&lt;/span&gt;],[&lt;span class=&quot;number&quot;&gt;34&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;45&lt;/span&gt;],[&lt;span class=&quot;number&quot;&gt;12&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;19&lt;/span&gt;]]
+    labelset = [&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;]
+    predictLable =  knn(exmpleSet,dataset,labelset,&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;)
+    show(exmpleSet,dataset,labelset,predictLable)
+    &lt;span class=&quot;keyword&quot;&gt;print&lt;/span&gt; predictLable
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&quot;&amp;#x9644;&amp;#x4E0A;&amp;#x7B80;&amp;#x5355;&amp;#x5B9E;&amp;#x73B0;&quot;&gt;&lt;a href=&quot;#&amp;#x9644;&amp;#x4E0A;&amp;#x7B80;&amp;#x5355;&amp;#x5B9E;&amp;#x73B0;&quot; class=&quot;headerlink&quot; title=&quot;&amp;#x9644;&amp;#x4E0A;&amp;#x7B80;&amp;#x5355;&amp;#x5B9E;&amp;#x73B0;&quot;&gt;&lt;/a&gt;&amp;#x9644;&amp;#x4E0A;&amp;#x7B80;&amp;#x5355;&amp;#x5B9E;&amp;#x73B0;&lt;/h4&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/zuston/code-library/blob/master/ml-basic-algorithm/KNN.py&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://github.com/zuston/code-library/blob/master/ml-basic-algorithm/KNN.py&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;k-means&quot;&gt;&lt;a href=&quot;#k-means&quot; class=&quot;headerlink&quot; title=&quot;k-means&quot;&gt;&lt;/a&gt;k-means&lt;/h2&gt;&lt;p&gt;k-means&amp;#x662F;&amp;#x6570;&amp;#x636E;&amp;#x5206;&amp;#x6790;&amp;#x7684;&amp;#x805A;&amp;#x7C7B;&amp;#x7B97;&amp;#x6CD5;&amp;#xFF0C;&amp;#x76F8;&amp;#x5BF9;&amp;#x4E8E;&amp;#x5206;&amp;#x7C7B;&amp;#x7B97;&amp;#x6CD5;&amp;#xFF0C;&amp;#x805A;&amp;#x7C7B;&amp;#x7B97;&amp;#x6CD5;&amp;#x7B97;&amp;#x662F;&amp;#x65E0;&amp;#x76D1;&amp;#x7763;&amp;#x5B66;&amp;#x4E60;&amp;#x7684;&amp;#x4E00;&amp;#x79CD;&amp;#x5165;&amp;#x95E8;&amp;#x7B97;&amp;#x6CD5;&amp;#x3002;&amp;#x7B80;&amp;#x5355;&amp;#x4E00;&amp;#x63D0;&amp;#xFF0C;&amp;#x65E0;&amp;#x76D1;&amp;#x7763;&amp;#x5B66;&amp;#x4E60;&amp;#x5C31;&amp;#x662F;&amp;#x5BF9;&amp;#x4E8E;&amp;#x4E00;&amp;#x4E9B;&amp;#x672A;&amp;#x5904;&amp;#x7406;&amp;#x7684;&amp;#x6570;&amp;#x636E;&amp;#x901A;&amp;#x8FC7;&amp;#x7B97;&amp;#x6CD5;&amp;#x5E72;&amp;#x6253;&amp;#x6807;&amp;#x7B7E;&amp;#x7684;&amp;#x6D3B;&amp;#xFF0C;&amp;#x518D;&amp;#x9488;&amp;#x5BF9;&amp;#x8FD9;&amp;#x4E2A;&amp;#x8FDB;&amp;#x884C;&amp;#x5B66;&amp;#x4E60;&amp;#x9884;&amp;#x6D4B;&amp;#x4E0B;&amp;#x9762;&amp;#x7684;&amp;#x70B9;&amp;#x3002;&amp;#x76D1;&amp;#x7763;&amp;#x5B66;&amp;#x4E60;&amp;#x7684;&amp;#x8BDD;&amp;#xFF0C;&amp;#x5C31;&amp;#x662F;&amp;#x4EE5;&amp;#x4E0A;&amp;#x6240;&amp;#x8FF0;&amp;#x7684;&amp;#x5206;&amp;#x7C7B;&amp;#x7B97;&amp;#x6CD5;&amp;#x4E86;&amp;#xFF0C;&amp;#x5DF2;&amp;#x7ECF;&amp;#x6253;&amp;#x597D;&amp;#x6807;&amp;#x7B7E;&amp;#x4E86;&amp;#x3002;&lt;br&gt;&lt;br&gt;&amp;#x61D2;&amp;#x5F97;&amp;#x53D9;&amp;#x8FF0;&amp;#x4E86;&amp;#xFF0C;&amp;#x7B2C;&amp;#x4E00;&amp;#x6B21;&amp;#x65B0;&amp;#x9C9C;ppt&amp;#x548C;&amp;#x4EE3;&amp;#x7801;&amp;#x732E;&amp;#x4E0A;&amp;#x3002;&amp;#x4EE3;&amp;#x7801;&amp;#x53EF;&amp;#x51FA;&amp;#x56FE;&amp;#xFF0C;&amp;#x524D;&amp;#x63D0;&amp;#x5148;&amp;#x5B89;&amp;#x88C5;matplotlib.&lt;br&gt;&lt;/p&gt;
+&lt;h4 id=&quot;&amp;#x9644;&amp;#x4E0A;&amp;#x5730;&amp;#x5740;&quot;&gt;&lt;a href=&quot;#&amp;#x9644;&amp;#x4E0A;&amp;#x5730;&amp;#x5740;&quot; class=&quot;headerlink&quot; title=&quot;&amp;#x9644;&amp;#x4E0A;&amp;#x5730;&amp;#x5740;&quot;&gt;&lt;/a&gt;&amp;#x9644;&amp;#x4E0A;&amp;#x5730;&amp;#x5740;&lt;/h4&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/zuston/code-library/tree/master/ml-basic-algorithm/k-means&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://github.com/zuston/code-library/tree/master/ml-basic-algorithm/k-means&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&amp;#x1F3C6;&lt;br&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="ml" scheme="http://zuston.github.io/tags/ml/"/>
+    
+  </entry>
   
   <entry>
     <title>SVM算法</title>
