@@ -1,0 +1,269 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ThreadLocal浅析 | 沙茶</title>
+  <meta name="author" content="沙茶">
+  
+  <meta name="description" content="&amp;#x1F3C6;">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="ThreadLocal浅析"/>
+  <meta property="og:site_name" content="沙茶"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="沙茶" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script src="/js/jquery.min.js"></script>
+
+  
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-84656112-1', 'zuston.github.com');
+  ga('send', 'pageview');
+</script>
+
+
+</head>
+
+
+<body>
+  <!--[if lte IE 8]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0027_Simplified Chinese.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." style='margin-left:auto;margin-right:auto;display: block;'/></a></div> <![endif]-->
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">沙茶</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <time datetime="2016-11-13T06:26:19.000Z"><a href="/2016/11/13/ThreadLocal浅析/">2016-11-13</a></time>
+      
+      
+  
+    <h1 class="title">ThreadLocal浅析</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>&#x1F3C6;<br><a id="more"></a></p>
+<h3 id="&#x672A;&#x7528;ThreadLocal&#x51FA;&#x73B0;&#x7684;&#x95EE;&#x9898;"><a href="#&#x672A;&#x7528;ThreadLocal&#x51FA;&#x73B0;&#x7684;&#x95EE;&#x9898;" class="headerlink" title="&#x672A;&#x7528;ThreadLocal&#x51FA;&#x73B0;&#x7684;&#x95EE;&#x9898;"></a>&#x672A;&#x7528;ThreadLocal&#x51FA;&#x73B0;&#x7684;&#x95EE;&#x9898;</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">zthreadlocal</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        oj o = <span class="keyword">new</span> oj();</span><br><span class="line">        Thread t1 = <span class="keyword">new</span> zthread(o);</span><br><span class="line">        Thread t2 = <span class="keyword">new</span> zthread(o);</span><br><span class="line">        Thread t3 = <span class="keyword">new</span> zthread(o);</span><br><span class="line">        t1.start();</span><br><span class="line">        t2.start();</span><br><span class="line">        t3.start();</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">oj</span></span>{</span><br><span class="line">    <span class="keyword">static</span> Integer number = <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">oj</span><span class="params">()</span></span>{</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getNumber</span><span class="params">()</span></span>{</span><br><span class="line">        <span class="keyword">return</span> number++;</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">zthread</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>{</span><br><span class="line">    <span class="keyword">private</span> oj o = <span class="keyword">null</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">zthread</span><span class="params">(oj o)</span></span>{</span><br><span class="line">        <span class="keyword">this</span>.o = o;</span><br><span class="line">    }</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">3</span>;i++){</span><br><span class="line">            System.out.println(Thread.currentThread().getName()+<span class="string">&quot;  &quot;</span>+<span class="keyword">this</span>.o.getNumber());</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>&#x8F93;&#x51FA;&#x4E3A;:<br><br>Thread-0  0<br><br>Thread-0  1<br><br>Thread-0  2<br><br>Thread-1  3<br><br>Thread-1  4<br><br>Thread-1  5<br><br>Thread-2  6<br><br>Thread-2  7<br><br>Thread-2  8<br></p>
+<h3 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">zthreadlocal</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        oj o = <span class="keyword">new</span> oj();</span><br><span class="line">        Thread t1 = <span class="keyword">new</span> zthread(o);</span><br><span class="line">        Thread t2 = <span class="keyword">new</span> zthread(o);</span><br><span class="line">        Thread t3 = <span class="keyword">new</span> zthread(o);</span><br><span class="line">        t1.start();</span><br><span class="line">        t2.start();</span><br><span class="line">        t3.start();</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">oj</span></span>{</span><br><span class="line">    ThreadLocal&lt;Integer&gt; number = <span class="keyword">new</span> ThreadLocal&lt;Integer&gt;(){</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> Integer <span class="title">initialValue</span><span class="params">()</span> </span>{</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">    };</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">oj</span><span class="params">()</span></span>{</span><br><span class="line"></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getNumber</span><span class="params">()</span></span>{</span><br><span class="line">        Integer res = number.get();</span><br><span class="line">        number.set(res+<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">zthread</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>{</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> oj o = <span class="keyword">null</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">zthread</span><span class="params">(oj o)</span></span>{</span><br><span class="line">        <span class="keyword">this</span>.o = o;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">3</span>;i++){</span><br><span class="line">            System.out.println(Thread.currentThread().getName()+<span class="string">&quot;  &quot;</span>+<span class="keyword">this</span>.o.getNumber());</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>&#x8F93;&#x51FA;:<br><br>Thread-0  0<br><br>Thread-0  1<br><br>Thread-2  0<br><br>Thread-2  1<br><br>Thread-1  0<br><br>Thread-2  2<br><br>Thread-0  2<br><br>Thread-1  1<br><br>Thread-1  2<br></p>
+<h3 id="&#x5982;&#x4F55;&#x5B9E;&#x73B0;ThreadLocal"><a href="#&#x5982;&#x4F55;&#x5B9E;&#x73B0;ThreadLocal" class="headerlink" title="&#x5982;&#x4F55;&#x5B9E;&#x73B0;ThreadLocal"></a>&#x5982;&#x4F55;&#x5B9E;&#x73B0;ThreadLocal</h3><p>&#x5B9E;&#x73B0;ThreadLocal&#x5F88;&#x7B80;&#x5355;&#xFF0C;&#x5C31;&#x662F;&#x5224;&#x65AD;&#x6BCF;&#x4E2A;&#x7EBF;&#x7A0B;&#x7684;hashCode&#x5C31;&#x53EF;&#x4EE5;&#x4E86;&#xFF0C;&#x9644;&#x4E0A;&#x4EE3;&#x7801;<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">zthreadlocal</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        oj o = <span class="keyword">new</span> oj();</span><br><span class="line">        Thread t1 = <span class="keyword">new</span> zthread(o);</span><br><span class="line">        Thread t2 = <span class="keyword">new</span> zthread(o);</span><br><span class="line">        Thread t3 = <span class="keyword">new</span> zthread(o);</span><br><span class="line">        t1.start();</span><br><span class="line">        t2.start();</span><br><span class="line">        t3.start();</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">oj</span></span>{</span><br><span class="line">    zt&lt;Integer&gt; number = <span class="keyword">new</span> zt&lt;Integer&gt;(){</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> Integer <span class="title">initialValue</span><span class="params">()</span> </span>{</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">    };</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">oj</span><span class="params">()</span></span>{</span><br><span class="line"></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getNumber</span><span class="params">()</span></span>{</span><br><span class="line">        Integer res = number.get();</span><br><span class="line">        number.set(res+<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">zthread</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>{</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> oj o = <span class="keyword">null</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">zthread</span><span class="params">(oj o)</span></span>{</span><br><span class="line">        <span class="keyword">this</span>.o = o;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">3</span>;i++){</span><br><span class="line">            System.out.println(Thread.currentThread().getName()+<span class="string">&quot;  &quot;</span>+<span class="keyword">this</span>.o.getNumber());</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">zt</span>&lt;<span class="title">T</span>&gt; </span>{</span><br><span class="line">    <span class="keyword">public</span> HashMap&lt;Thread,T&gt; hm = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">private</span> T value = <span class="keyword">null</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">zt</span><span class="params">()</span></span>{</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  T <span class="title">get</span><span class="params">()</span></span>{</span><br><span class="line">        <span class="keyword">if</span>(!hm.containsKey(Thread.currentThread())){</span><br><span class="line">            hm.put(Thread.currentThread(),initialValue());</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> hm.get(Thread.currentThread());</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(T v)</span></span>{</span><br><span class="line">        hm.put(Thread.currentThread(),v);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> T <span class="title">initialValue</span><span class="params">()</span></span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></p>
+<p>&#x53EF;&#x89C1;&#x601D;&#x60F3;&#x5F88;&#x91CD;&#x8981;</p>
+
+      
+    </div>
+    <footer>
+      
+
+        
+        
+          <div class="alignright post-nav">
+            <em>下一篇: </em><a href="/2016/11/06/动态规划/">动态规划</a>
+          </div>
+          <div class="clearfix"></div>
+        
+
+        
+          <div class="copyright">
+            
+              <span class="claim">版权声明：自由转载-非商用-无演绎-保持署名 @ Creative Commons BY-NC-ND 3.0</span>
+            
+            
+              <span class="from-link">
+                <em>本文链接地址:</em>
+                <a href="/2016/11/13/ThreadLocal浅析/">
+                  http://zuston.github.io/2016/11/13/ThreadLocal浅析/
+                </a>
+              </span>
+            
+          </div>
+        
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/coding/">coding</a>
+  </div>
+
+        
+  <div class="addthis addthis_toolbox addthis_default_style">
+    
+    
+    
+      <a class="addthis_button_sinaweibo_like"></a>
+    
+    
+      <a class="addthis_button_linkedin"></a>
+    
+    
+    
+    <a class="addthis_counter addthis_pill_style"></a>
+  </div>
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js"></script>
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+<h2 class="title">评论</h2>
+
+ <!-- 多说评论框 start -->
+<div class="ds-thread" data-thread-key="2016/11/13/ThreadLocal浅析/" data-title="ThreadLocal浅析" data-url="http://zuston.github.io/2016/11/13/ThreadLocal浅析/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<div class="ds-recent-visitors" data-num-items="28" data-avatar-size="42" id="ds-recent-visitors"></div>
+
+<script type="text/javascript">
+    var duoshuoQuery = {short_name:"zuston"};
+        (function() {
+            var ds = document.createElement('script');
+            ds.type = 'text/javascript';ds.async = true;
+            ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            ds.charset = 'UTF-8';
+            (document.getElementsByTagName('head')[0]
+             || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+</script>
+<!-- 多说公共JS代码 end -->
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="text" name="q" results="0" placeholder="Suche">
+    <i class="icon-search"></i>
+    <input type="hidden" name="q" value="site:zuston.github.io">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/coding/">coding</a><small>4</small></li>
+  
+    <li><a href="/tags/leetcode/">leetcode</a><small>1</small></li>
+  
+    <li><a href="/tags/life/">life</a><small>1</small></li>
+  
+    <li><a href="/tags/ml/">ml</a><small>2</small></li>
+  
+  </ul>
+</div>
+
+
+  <div class="trace-invest">
+    <span>
+        <a href="http://www.github.com/zuston" target="_blank">小代码站点 :</br>github.com/zuston</a>
+    </span>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Neueste Artikel</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2016/11/13/ThreadLocal浅析/">ThreadLocal浅析</a>
+      </li>
+    
+      <li>
+        <a href="/2016/11/06/动态规划/">动态规划</a>
+      </li>
+    
+      <li>
+        <a href="/2016/11/02/十月的生活/">十月的生活</a>
+      </li>
+    
+      <li>
+        <a href="/2016/10/20/k-means和knn/">k-means和knn</a>
+      </li>
+    
+      <li>
+        <a href="/2016/10/13/SVM算法/">SVM算法</a>
+      </li>
+    
+      <li>
+        <a href="/2016/10/09/redis基本命令/">redis基本命令</a>
+      </li>
+    
+      <li>
+        <a href="/2016/09/25/贪心算法/">贪心算法</a>
+      </li>
+    
+      <li>
+        <a href="/2016/09/23/九月的一点总结/">九月的一点总结</a>
+      </li>
+    
+      <li>
+        <a href="/2016/04/26/夏至未至的上海/">夏至未至的上海</a>
+      </li>
+    
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <div id="go-pg-top"><i class="icon-arrow-up"></i></div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 沙茶
+  
+  <br>
+  <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+</div>
+<div class="clearfix"></div>
+</footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/page.js"></script>
+
+
+</body>
+
+</html>
